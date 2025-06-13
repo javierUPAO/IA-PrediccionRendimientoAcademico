@@ -63,11 +63,11 @@ def predecir_rendimiento(df):
     # Categorizar el nivel de riesgo
     def categorizar(valor):
         if valor < 33:
-            return "Alto"
+            return "🔴 Alto"
         elif valor < 66.6:
-            return "Medio"
+            return "🟡 Medio"
         else:
-            return "Bajo"
+            return "🟢 Bajo"
     
     df['Nivel de Riesgo'] = df['Rendimiento_Predicho'].apply(categorizar)
     return df

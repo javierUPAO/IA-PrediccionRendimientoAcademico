@@ -10,7 +10,8 @@ from modules.ui import (
     vista_estudiantes,
     vista_predicciones,
     vista_analisis,
-    vista_detalle_estudiante
+    vista_detalle_estudiante,
+    vista_estudiante_manual
 )
 
 # Inicializar estado al inicio
@@ -38,3 +39,5 @@ elif pagina_actual == "Análisis":
     vista_analisis()
 elif pagina_actual == "Detalle":
     vista_detalle_estudiante()
+elif pagina_actual == "Estudiante Manual":
+    vista_estudiante_manual()
