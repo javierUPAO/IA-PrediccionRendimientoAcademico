@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from io import BytesIO
+import joblib
 from .modelo import predecir_rendimiento
 
 # Estado global para guardar datos entre páginas
@@ -11,11 +12,13 @@ def init_session_state():
 init_session_state()
 
 def mostrar_sidebar():
-    return st.sidebar.radio("Menú", ["Inicio", "Estudiantes", "Predicciones", "Análisis"])
+    return st.sidebar.radio("Menú", ["Inicio", "Estudiantes", "Predicciones", "Análisis", "Estudiante Manual"])
 
 def vista_inicio():
     st.title("🏠 Bienvenido a AcademicProfessor")
     st.write("Esta herramienta predice el rendimiento académico de estudiantes a partir de datos socioeducativos.\n\nPara comenzar, inicia sesión y sube un archivo Excel desde la pestaña 'Predicciones'.")
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
 
     if not st.session_state.logged_in:
         with st.form("login"):
@@ -125,3 +128,62 @@ def vista_detalle_estudiante():
             st.rerun()
     else:
         st.warning("ID no especificado o datos no disponibles.")
+
+def vista_estudiante_manual():
+    st.title("🧍 Predicción para un Estudiante Individual")
+    st.markdown("Ingrese los datos del estudiante manualmente para obtener su predicción de rendimiento académico.")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        horas_estudio = st.number_input("Horas de estudio", min_value=0, max_value=100)
+        asistencia = st.number_input("Porcentaje Asistencias", min_value=0, max_value=100)
+        participacion = st.selectbox("Participación de los padres", ["Bajo", "Medio", "Alto"])
+        acceso_recursos = st.selectbox("Acceso a recursos", ["Bajo", "Medio", "Alto"])
+        extracurriculares = st.selectbox("Actividades Extracurriculares", ["Si", "No"])
+        horas_sueno = st.slider("Horas de sueño", 0, 12)
+
+    with col2:
+        motivacion = st.selectbox("Nivel de motivación", ["Bajo", "Medio", "Alto"])
+        internet = st.selectbox("Acceso a internet", ["Si", "No"])
+        tutoria = st.number_input("Sesiones de tutoría", min_value=0, max_value=50)
+        ingresos = st.selectbox("Ingresos familiares", ["Bajo", "Medio", "Alto"])
+        calidad_docente = st.selectbox("Calidad docente", ["Bajo", "Medio", "Alto"])
+        escuela = st.selectbox("Tipo escuela de origen", ["Publica", "Privada"])
+        discapacidad = st.selectbox("Discapacidad Cognitiva", ["Si", "No"])
+        educacion = st.selectbox("Educación parental", ["Secundaria completa", "Bachiller", "Titulado"])
+        distancia = st.selectbox("Distancia de casa", ["Lejos", "Moderado", "Cerca"])
+
+    if st.button("Predecir rendimiento"):
+        try:
+            # Crear DataFrame con columnas en español como en el Excel original
+            datos = pd.DataFrame([{
+                "Horas de estudio": horas_estudio,
+                "Porcentaje Asistencias": asistencia,
+                "Participación de los padres": participacion,
+                "Acceso a recursos": acceso_recursos,
+                "Actividades Extracurriculares": extracurriculares,
+                "Horas de sueño": horas_sueno,
+                "Nivel de motivación": motivacion,
+                "Acceso a internet": internet,
+                "Sesiones de tutoria": tutoria,
+                "Ingresos familiares": ingresos,
+                "Calidad docente": calidad_docente,
+                "Tipo escuela origen": escuela,
+                "Discapacidad Cognitiva": discapacidad,
+                "Educación parental": educacion,
+                "Distancia de casa": distancia
+            }])
+
+            # Usar exactamente la misma función central
+            resultado = predecir_rendimiento(datos)
+
+            # Mostrar resultado
+            pred = resultado["Rendimiento_Predicho"].iloc[0]
+            riesgo = resultado["Nivel de Riesgo"].iloc[0]
+
+            st.success(f"✅ Rendimiento predicho: **{pred:.2f}**")
+            st.info(f"🎯 Nivel de riesgo estimado: **{riesgo}**")
+
+        except Exception as e:
+            st.error(f"❌ Error al predecir: {e}")
