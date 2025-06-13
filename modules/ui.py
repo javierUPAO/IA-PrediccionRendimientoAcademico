@@ -3,6 +3,9 @@ import pandas as pd
 from io import BytesIO
 import joblib
 from .modelo import predecir_rendimiento
+import matplotlib.pyplot as plt
+import plotly.express as px
+import seaborn as sns
 
 # Estado global para guardar datos entre páginas
 def init_session_state():
@@ -106,8 +109,64 @@ def vista_predicciones():
 
 def vista_analisis():
     st.title("📈 Análisis de Datos")
-    st.info("Aquí podrás visualizar análisis descriptivos y gráficos. (Próximamente)")
 
+    if "df_completo" in st.session_state and st.session_state.df_completo is not None:
+        df = st.session_state.df_completo.copy()
+
+        st.subheader("1️⃣ Distribución del Rendimiento Predicho")
+        fig1, ax1 = plt.subplots()
+        ax1.hist(df['Rendimiento_Predicho'], bins=10, color="skyblue", edgecolor="black")
+        ax1.set_xlabel("Rendimiento")
+        ax1.set_ylabel("Frecuencia")
+        ax1.set_title("Histograma de Rendimiento Predicho")
+        st.pyplot(fig1)
+
+        # ✅ Preparar datos correctamente para el gráfico de torta
+        riesgo_counts = df['Nivel de Riesgo'].value_counts().reset_index()
+        riesgo_counts.columns = ['Riesgo', 'Cantidad']
+
+        # ✅ Asignar colores personalizados por categoría
+        colores_riesgo = {
+            "🔴 Alto": "red",
+            "🟡 Medio": "gold",
+            "🟢 Bajo": "green"
+        }
+
+        # ✅ Ordenar los niveles de riesgo
+        orden_riesgo = ["🔴 Alto", "🟡 Medio", "🟢 Bajo"]
+        riesgo_counts['Riesgo'] = pd.Categorical(riesgo_counts['Riesgo'], categories=orden_riesgo, ordered=True)
+        riesgo_counts = riesgo_counts.sort_values('Riesgo')
+
+        # ✅ Crear gráfico con colores personalizados
+        fig2 = px.pie(
+            riesgo_counts,
+            names='Riesgo',
+            values='Cantidad',
+            title='Proporción por Nivel de Riesgo',
+            color='Riesgo',
+            color_discrete_map=colores_riesgo
+        )
+
+        st.subheader("2️⃣ Distribución de Nivel de Riesgo")
+        st.plotly_chart(fig2)
+
+
+        st.subheader("3️⃣ Relación entre Horas de Estudio y Rendimiento")
+        fig3 = px.scatter(df, x="Horas de estudio", y="Rendimiento_Predicho", color="Nivel de Riesgo",
+                          labels={"Horas de estudio": "Horas de estudio", "Rendimiento_Predicho": "Rendimiento"})
+        st.plotly_chart(fig3)
+
+        st.subheader("4️⃣ Boxplot de Rendimiento según Nivel de Motivación")
+        if "Nivel de motivación" in df.columns:
+            fig4, ax4 = plt.subplots()
+            sns.boxplot(data=df, x="Nivel de motivación", y="Rendimiento_Predicho", palette="Set2", ax=ax4)
+            ax4.set_title("Distribución de Rendimiento por Motivación")
+            st.pyplot(fig4)
+        else:
+            st.warning("No se encuentra la columna 'Nivel de motivación'.")
+
+    else:
+        st.info("Sube un archivo en la sección 'Predicciones' para ver el análisis.")
 def vista_detalle_estudiante():
     st.title("📄 Detalle del Estudiante")
 

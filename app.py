@@ -11,9 +11,11 @@ from modules.ui import (
     vista_predicciones,
     vista_analisis,
     vista_detalle_estudiante,
-    vista_estudiante_manual
+    vista_estudiante_manual,
+    init_session_state
 )
 
+init_session_state()
 # Inicializar estado al inicio
 if "pagina" not in st.session_state:
     st.session_state.pagina = "Inicio"
