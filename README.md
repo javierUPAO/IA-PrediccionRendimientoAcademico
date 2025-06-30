@@ -68,7 +68,7 @@ pip install streamlit pandas joblib xgboost openpyxl
 
 3. **Ejecuta la aplicación**
 ```bash
-streamlit run app.py
+streamlit run App/app.py
 ```
 
 4. **Accede a la aplicación**
@@ -80,23 +80,33 @@ streamlit run app.py
 ```
 IA-PrediccionRendimientoAcademico/
 │
-├── app.py                          # Archivo principal de Streamlit
-├── modelo_entrenado_xgb.pkl        # Modelo XGBoost entrenado
-├── DatosEstudiantesPredecir.xlsx   # Archivo de ejemplo
-├── Proyecto.ipynb                  # Notebook de desarrollo y entrenamiento
 ├── README.md                       # Documentación del proyecto
+├── .gitignore                      # Archivos ignorados por Git
 │
-└── modules/
-    ├── __init__.py                 # Inicializador del paquete
-    ├── modelo.py                   # Lógica del modelo de predicción
-    └── ui.py                       # Interfaces de usuario
+├── App/                            # 🚀 Aplicación Principal
+│   ├── app.py                      # Archivo principal de Streamlit
+│   ├── modelo_entrenado_xgb.pkl    # Modelo XGBoost entrenado
+│   ├── DatosEstudiantesPredecir.xlsx # Archivo de ejemplo
+│   └── modules/                    # Módulos de la aplicación
+│       ├── __init__.py             # Inicializador del paquete
+│       ├── modelo.py               # Lógica del modelo de predicción
+│       └── ui.py                   # Interfaces de usuario
+│
+└── Modelo-Dataset/                 # 🧠 Desarrollo del Modelo
+    ├── PROYECTO_IA.ipynb           # Notebook de entrenamiento del modelo
+    └── StudentPerformanceFactors.csv # Dataset original
 ```
+
+### 📂 Descripción de Carpetas
+
+- **`App/`**: Contiene toda la aplicación web lista para ejecutar
+- **`Modelo-Dataset/`**: Contiene el desarrollo, entrenamiento y dataset del modelo ML
 
 ## 💻 Uso de la Aplicación
 
 ### 🚀 Primeros Pasos
 
-1. **Ejecuta la aplicación** con `streamlit run app.py`
+1. **Ejecuta la aplicación** con `streamlit run App/app.py`
 2. **Abre tu navegador** en `http://localhost:8501`
 3. **Inicia sesión** con las credenciales por defecto
 
@@ -198,10 +208,51 @@ IA-PrediccionRendimientoAcademico/
 └─────────────────┘    └──────────────────┘    └─────────────────┘
 ```
 
-### Cache Inteligente
-- **@st.cache_resource** para optimización de memoria
-- **Carga única** del modelo por sesión
-- **Procesamiento en tiempo real** sin recarga
+
+## 🧬 Desarrollo del Modelo de Machine Learning
+
+### 📂 Carpeta `Modelo-Dataset/`
+
+Esta carpeta contiene todo el proceso de desarrollo y entrenamiento del modelo:
+
+#### 📓 `PROYECTO_IA.ipynb`
+**Notebook principal con:**
+- **Análisis Exploratorio de Datos (EDA)**
+  - Visualizaciones de distribuciones
+  - Correlaciones entre variables
+  - Detección de valores atípicos
+  
+- **Preprocesamiento**
+  - Limpieza de datos
+  - Codificación de variables categóricas
+  - Normalización y escalado
+  
+- **Entrenamiento del Modelo**
+  - Selección de algoritmo XGBoost
+  - División train/test
+  - Validación cruzada
+  
+- **Evaluación y Optimización**
+  - Métricas de rendimiento
+  - Grid Search para hiperparámetros
+  - Análisis de importancia de características
+
+#### 📊 `StudentPerformanceFactors.csv`
+**Dataset original con:**
+- **20,000+ registros** de estudiantes
+- **15 variables predictoras** socioeducativas
+- **Variable objetivo**: Rendimiento académico
+- **Datos balanceados** y preprocesados
+
+### 🔬 Metodología de Desarrollo
+
+1. **Exploración**: Análisis estadístico del dataset
+2. **Limpieza**: Tratamiento de valores faltantes y outliers
+3. **Ingeniería**: Creación y transformación de características
+4. **Modelado**: Entrenamiento con múltiples algoritmos
+5. **Evaluación**: Validación con métricas apropiadas
+6. **Optimización**: Ajuste fino de hiperparámetros
+7. **Exportación**: Guardado del modelo final para producción
 
 ## 📝 Formato de Datos de Entrada
 
@@ -234,74 +285,44 @@ El archivo Excel debe contener las siguientes columnas:
 
 ### Estructura de Módulos
 
-#### `app.py`
-- Punto de entrada principal
+#### `App/app.py`
+- Punto de entrada principal de la aplicación
 - Configuración de Streamlit
 - Enrutamiento de páginas
 
-#### `modules/modelo.py`
+#### `App/modules/modelo.py`
 - Carga del modelo entrenado
 - Función de predicción
 - Mapeo y transformación de datos
 
-#### `modules/ui.py`
+#### `App/modules/ui.py`
 - Interfaces de usuario
 - Gestión de estado de sesión
 - Funciones de visualización
 
-### Personalización del Modelo
+### Personalización y Desarrollo del Modelo
 
-Para reentrenar el modelo:
+**Para ver el desarrollo completo del modelo:**
+- 📂 **Navega a la carpeta `Modelo-Dataset/`**
+- 📓 **Abre el notebook `PROYECTO_IA.ipynb`**
+- 📊 **Revisa el dataset `StudentPerformanceFactors.csv`**
 
-1. Abre `Proyecto.ipynb`
-2. Modifica los datos de entrenamiento
-3. Ejecuta las celdas de entrenamiento
-4. Guarda el nuevo modelo como `modelo_entrenado_xgb.pkl`
+**Para reentrenar el modelo:**
 
-## 🔧 Resolución de Problemas
+1. Ve a la carpeta `Modelo-Dataset/`
+2. Abre `PROYECTO_IA.ipynb`
+3. Modifica los datos de entrenamiento si es necesario
+4. Ejecuta todas las celdas del notebook
+5. El modelo entrenado se guardará automáticamente como `modelo_entrenado_xgb.pkl`
+6. Copia el nuevo modelo a la carpeta `App/` para usar en la aplicación
 
-### Errores Comunes
-
-**Error: "Archivo no contiene todas las columnas requeridas"**
-- Verifica que el Excel tenga todas las columnas listadas en la tabla de formato
-- Revisa la ortografía exacta de los nombres de columnas (mayúsculas, espacios, tildes)
-- Asegúrate de que no haya columnas vacías o con nombres diferentes
-
-**Error de memoria o rendimiento lento**
-- Reduce el tamaño del archivo Excel (máximo recomendado: 1000 estudiantes)
-- Cierra otras aplicaciones que consuman memoria
-- Reinicia la aplicación con Ctrl+C y vuelve a ejecutar `streamlit run app.py`
-
-**Problemas de login**
-- Usa exactamente: Usuario: `admin`, Contraseña: `admin`
-- Verifica que no haya espacios adicionales antes o después del texto
-- Actualiza la página si el formulario no responde
-
-**Error: "Modelo no encontrado"**
-- Verifica que el archivo `modelo_entrenado_xgb.pkl` esté en la carpeta raíz
-- No muevas ni renombres el archivo del modelo
-- Si el archivo está corrupto, ejecuta el notebook `Proyecto.ipynb` para regenerarlo
-
-**Problemas de dependencias**
-- Actualiza pip: `python -m pip install --upgrade pip`
-- Reinstala las dependencias: `pip install --upgrade streamlit pandas joblib xgboost openpyxl`
-- Verifica la versión de Python: `python --version` (debe ser 3.9+)
-
-### 🆘 Comandos de Diagnóstico
-
-```bash
-# Verificar instalación de dependencias
-pip list | grep -E "(streamlit|pandas|joblib|xgboost|openpyxl)"
-
-# Verificar que el modelo existe
-ls modelo_entrenado_xgb.pkl
-
-# Limpiar cache de Streamlit
-streamlit cache clear
-
-# Ejecutar con logs detallados
-streamlit run app.py --logger.level=debug
-```
+**📚 El notebook incluye:**
+- Análisis exploratorio de datos (EDA)
+- Preprocesamiento y limpieza de datos
+- Entrenamiento del modelo XGBoost
+- Evaluación y validación del modelo
+- Optimización de hiperparámetros
+- Exportación del modelo final
 
 ## 📋 Casos de Uso Recomendados
 
