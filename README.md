@@ -5,6 +5,12 @@
 ![XGBoost](https://img.shields.io/badge/XGBoost-3.0+-green.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+## 🎥 Video Demostración
+
+[![Demo de AcademicProfessor](https://img.youtube.com/vi/75Ul4O66aCQ/maxresdefault.jpg)](https://youtu.be/75Ul4O66aCQ)
+
+📹 **[Ver Demo de la Aplicación en YouTube](https://youtu.be/75Ul4O66aCQ)** - Demostración completa de todas las funcionalidades
+
 ## 📋 Descripción
 
 **AcademicProfessor** es una aplicación web de Machine Learning desarrollada con Streamlit que predice el rendimiento académico de estudiantes basándose en factores socioeducativos. Utiliza un modelo XGBoost entrenado para analizar 15 variables diferentes y proporcionar predicciones precisas sobre el desempeño estudiantil.
